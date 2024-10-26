@@ -17,9 +17,12 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Hotel Reservation API',
+            title: 'API de Reservacion de Hoteles',
             version: '1.0.0',
-            description: 'API para reservas de hotel en Medellín',
+            description: 'Integrantes: ' +
+                'Camilo Hernandez - ' +
+                'Oscar Castaño - ' +
+                'Shaddai Caballero',
         },
         servers: [
             {
