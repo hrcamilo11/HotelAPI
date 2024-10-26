@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
-const authMiddleware = require('../middleware/auth');
+
 
 /**
  * @swagger
@@ -51,8 +51,7 @@ const authMiddleware = require('../middleware/auth');
  *   get:
  *     summary: Returns the list of all reservations
  *     tags: [Reservations]
- *     security:
- *       - bearerAuth: []
+
  *     responses:
  *       200:
  *         description: The list of reservations
@@ -67,7 +66,7 @@ const authMiddleware = require('../middleware/auth');
  *       500:
  *         description: Some server error
  */
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/',  async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('reservations')
@@ -87,8 +86,7 @@ router.get('/', authMiddleware, async (req, res) => {
  *   get:
  *     summary: Get a reservation by id
  *     tags: [Reservations]
- *     security:
- *       - bearerAuth: []
+
  *     parameters:
  *       - in: path
  *         name: id
@@ -110,7 +108,7 @@ router.get('/', authMiddleware, async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.get('/:id', authMiddleware, async (req, res) => {
+router.get('/:id',  async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('reservations')
@@ -136,8 +134,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
  *   post:
  *     summary: Create a new reservation
  *     tags: [Reservations]
- *     security:
- *       - bearerAuth: []
+
  *     requestBody:
  *       required: true
  *       content:
@@ -158,7 +155,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/',  async (req, res) => {
     const { user_id, room_id, check_in, check_out } = req.body;
 
     if (!user_id || !room_id || !check_in || !check_out) {
@@ -185,8 +182,7 @@ router.post('/', authMiddleware, async (req, res) => {
  *   put:
  *     summary: Update a reservation
  *     tags: [Reservations]
- *     security:
- *       - bearerAuth: []
+
  *     parameters:
  *       - in: path
  *         name: id
@@ -216,7 +212,7 @@ router.post('/', authMiddleware, async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.put('/:id', authMiddleware, async (req, res) => {
+router.put('/:id',  async (req, res) => {
     const { user_id, room_id, check_in, check_out } = req.body;
 
     if (!user_id || !room_id || !check_in || !check_out) {
@@ -248,8 +244,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
  *   delete:
  *     summary: Delete a reservation
  *     tags: [Reservations]
- *     security:
- *       - bearerAuth: []
+
  *     parameters:
  *       - in: path
  *         name: id
@@ -267,7 +262,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.delete('/:id', authMiddleware, async (req, res) => {
+router.delete('/:id',  async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('reservations')

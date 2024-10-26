@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
-const authMiddleware = require('../middleware/auth');
+
 
 /**
  * @swagger
@@ -22,11 +22,6 @@ const authMiddleware = require('../middleware/auth');
  *           type: string
  *           format: date
  *           description: The date the user was added
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
  */
 
 /**
@@ -113,14 +108,58 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Create a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: The user was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Some server error
+ */
+router.post('/', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .insert({ email })
+            .single();
+
+        if (error) throw error;
+
+        res.status(201).json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 /**
  * @swagger
  * /api/users/{id}:
  *   put:
  *     summary: Update a user
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -148,7 +187,7 @@ router.get('/:id', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.put('/:id', authMiddleware, async (req, res) => {
+router.put('/:id', async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
@@ -163,7 +202,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
             .single();
 
         if (error) throw error;
-
+ 
         if (!data) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -180,8 +219,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
  *   delete:
  *     summary: Delete a user
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
+
  *     parameters:
  *       - in: path
  *         name: id
@@ -199,7 +237,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
  *       500:
  *         description: Some server error
  */
-router.delete('/:id', authMiddleware, async (req, res) => {
+router.delete('/:id',  async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('users')
